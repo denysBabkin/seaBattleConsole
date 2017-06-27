@@ -42,6 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="SeaBattle\Controllers\GameController.cs" />
+    <Compile Include="SeaBattle\Controllers\IUserController.cs" />
+    <Compile Include="SeaBattle\Controllers\UserController.cs" />
     <Compile Include="SeaBattle\GameSeaBattle.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

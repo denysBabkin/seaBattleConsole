@@ -8,34 +8,32 @@ namespace SeaBattleConsole.SeaBattle.Controllers
 {
     public class GameController
     {
-        public const int MaxUserCount = 2;
-
         public enum State {Init, Start, WaitUser, End};
 
         private BattleFieldVO _battleFiledVo;
         private GameView _gameView;
         private State _currentState = State.Init;
 
-        public void Init()
+        public void Init(IUserController userFirst, IUserController userSecond)
         {
             _battleFiledVo = new BattleFieldVO();
-            CreateFields();
+            CreateFields(userFirst, userSecond);
             
             _gameView = new GameView();
             _gameView.Init();
             
             _currentState = State.Start;
 
+            userFirst.Lock();
+            userSecond.Lock();
             ReadKey();
         }
 
-        private void CreateFields()
+        private void CreateFields(IUserController userFirst, IUserController userSecond)
         {
             _battleFiledVo.Fields = new List<Field>();
-            for (int i = 0; i < MaxUserCount; i++)
-            {
-                _battleFiledVo.Fields.Add(new Field(i.ToString()));
-            }
+            _battleFiledVo.Fields.Add(new Field(userFirst));
+            _battleFiledVo.Fields.Add(new Field(userSecond));
         }
 
         public void GenerateShipsAllUsers()
@@ -43,7 +41,7 @@ namespace SeaBattleConsole.SeaBattle.Controllers
             for (int i = 0; i < _battleFiledVo.Fields.Count; i++)
             {
                 Field field = _battleFiledVo.Fields[i];
-                field.Ships[0] = new ShipVO(0, 0, true, 1);
+                field.Ships.Add(new ShipVO(0, 0, true, 1));
             }
         }
 
@@ -56,14 +54,9 @@ namespace SeaBattleConsole.SeaBattle.Controllers
                 {
                     GenerateShipsAllUsers();
                     _gameView.Start();
+                    _battleFiledVo.Fields[0].User.Unlock();
                 }
             }
-            else if(_currentState == State.WaitUser)
-            {
-                
-            }
-            
-            ReadKey();
         }
     }
 }

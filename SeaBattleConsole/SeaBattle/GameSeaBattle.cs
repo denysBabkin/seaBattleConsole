@@ -10,7 +10,7 @@ namespace SeaBattleConsole.SeaBattle
         public void Start()
         {
             _gameController = new GameController();
-            _gameController.Init();
+            _gameController.Init(new UserController(), new UserController());
         }
     }
 }
